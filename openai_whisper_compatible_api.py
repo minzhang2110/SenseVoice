@@ -41,8 +41,8 @@ async def health():
 
 # Initialize the model - 使用本地缓存路径避免联网下载
 # 本地模型路径
-local_model_path = "/Users/dulei/.cache/modelscope/hub/models/iic/SenseVoiceSmall"
-local_vad_model_path = "/Users/dulei/.cache/modelscope/hub/models/iic/speech_fsmn_vad_zh-cn-16k-common-pytorch"
+local_model_path = "/Users/zhangmin/.cache/modelscope/hub/models/iic/SenseVoiceSmall"
+local_vad_model_path = "/Users/zhangmin/.cache/modelscope/hub/models/iic/speech_fsmn_vad_zh-cn-16k-common-pytorch"
 
 # 检查本地模型是否存在，如果不存在则使用原来的方式
 if os.path.exists(local_model_path) and os.path.exists(local_vad_model_path):
@@ -271,7 +271,7 @@ async def transcriptions(file: Union[UploadFile, None] = File(default=None), lan
             shutil.copyfileobj(fileobj, upload_file)
         
         # 确保音频数据保持为int32格式，并转换为一维数组
-        waveform, sample_rate = torchaudio.load(tmp_file)
+        waveform, sample_rate = torchaudio.load(str(tmp_file))
         waveform = (waveform * np.iinfo(np.int32).max).to(dtype=torch.int32).squeeze()
         if len(waveform.shape) > 1:
             waveform = waveform.float().mean(axis=0)  # 将多通道音频转换为单通道
